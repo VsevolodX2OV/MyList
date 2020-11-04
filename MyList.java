@@ -1,149 +1,161 @@
 package com.jetbrains;
 
 public class MyList {
-    class Item {
 
+    class Item {
         private int value;
         private Item next;
 
-        public Item (int value) {
+        public Item(int value) {
             this.value = value;
             this.next = null;
         }
-        public boolean hasNext() {
-            if (this.next != null)
-                return true;
-            else
-                return false;
-        }
 
-        public String toString() {
-            return Long.toString(this.value);
+        public boolean hasNext() {
+            if (this.next != null) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         public int getValue() {
             return value;
         }
 
-        public Item getNext() {
-            return next;
-        }
-
         public void setValue(int value) {
             this.value = value;
+        }
+
+        public Item getNext() {
+            return next;
         }
 
         public void setNext(Item next) {
             this.next = next;
         }
+
+        public String toString() {
+            return Long.toString(this.value);
+        }
     }
 
-    private Item run;
-    private int count;
+    private Item begin;
+    private long calculator;
 
     public MyList() {
-        this.run = null;
-        this.count = 0;
+        this.begin = null;
+        this.calculator = 0;
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    public Item end() {
-        if (this.run == null)
-            return null;
-        Item iter = this.run;
-        while (iter.hasNext()) {
-            iter = iter.getNext();
-        }
-        return iter;
+    public long getCalculator() {
+        return calculator;
     }
 
     public void add(int value) {
         Item item = new Item(value);
-        if (this.run == null)
-            this.run = item;
-        else
+        if (this.begin == null) {
+            this.begin = item;
+        } else {
             end().setNext(item);
-        this.count++;
+        }
+        this.calculator++;
+    }
+
+    public Item end() {
+        if (this.begin == null) {
+            return null;
+        }
+        Item iter = this.begin;
+        while (iter.hasNext()) {
+            iter = iter.getNext();
+        }
+        return iter;
+
     }
 
     public String toString() {
-        String result = "[";
-        if (this.run == null)
+        String result = "[ ";
+        if (this.begin == null) {
             return null;
-        else {
-            Item iter = this.run;
+        } else {
+            Item iter = this.begin;
             while (iter.hasNext()) {
-                result += iter.toString() + ",";
+                result += iter.toString() + ", ";
                 iter = iter.getNext();
             }
+            result += iter.toString();
         }
-        result += "]";
+        result += " ]";
         return result;
+
     }
 
     public Item indexAt(int index) {
-        if ((index < this.count -1) && (index >= 0)) {
-            Item x = run;
+        if ((index <= this.calculator - 1) & (index >= 0)) {
+            Item iter = this.begin;
             for (; index > 0; --index) {
-                x = x.getNext();
+                iter = iter.getNext();
             }
-            System.out.println(x);
-            return x;
-        }
-        else
+            return iter;
+        } else
             return null;
     }
 
-    public void swap(int firstPosit, int secondPosit ) {
-        Item PositOne = indexAt(firstPosit - 1);
-        Item PositOneSign = indexAt(firstPosit);
-        Item PositOneAfter = indexAt(firstPosit + 1);
-        Item PositTwo = indexAt(secondPosit - 1);
-        Item PositTwoSign = indexAt(secondPosit);
-        Item PositTwoAfter = indexAt(secondPosit + 1);
-        if (PositOne != null)
-            PositOne.setNext(PositTwo);
-        else
-            this.run = PositTwoSign;
-        PositOneSign.setNext(PositTwoAfter);
-        if(PositTwo == PositOneAfter) {
-            PositTwoSign.setNext(PositOneSign);
+    public void swap(int firstPos, int secondPos) {
+        if (firstPos > secondPos) {
+            int tmp = firstPos;
+            firstPos = secondPos;
+            secondPos = tmp;
         }
-        else {
-            PositTwoSign.setNext(PositOneAfter);
-            PositTwo.setNext(PositOneSign);
+        if (firstPos >= 0) {
+            Item signOneBefore = indexAt(firstPos - 1);
+            Item signOne = this.indexAt(firstPos);
+            Item signOneAfter = this.indexAt(firstPos + 1);
+            Item signTwoBefore = this.indexAt(secondPos - 1);
+            Item signTwo = this.indexAt(secondPos);
+            Item signTwoAfter = this.indexAt(secondPos + 1);
+
+            signOne.setNext(signTwoAfter);
+            if (signOneBefore != null)
+                signOneBefore.setNext(signTwo);
+            else
+                this.begin = signTwo;
+            if (signTwoBefore != signOne) {
+                signTwoBefore.setNext(signOne);
+                signTwo.setNext(signOneAfter);
+            } else {
+                signTwo.setNext(signOne);
+            }
         }
     }
 
     public void sort() {
-        int z;
-        int y;
-        Item t1;
-        Item t2;
-        while (this.count > 0) {
-            z = 0;
-            y = 1;
-            t1 = indexAt(z);
-            t2 = indexAt(y);
-            while (y < this.count) {
-                if (t1.getValue() >t2.getValue()) {
-                    swap(z,y);
-                    z += 1;
-                    y += 1;
-                    t1 = indexAt(z);
-                    t2 = indexAt(y);
-                }
-                else if (t1.getValue() <= t2.getValue()) {
-                    ++z;
-                    ++y;
-                    t1 = t1.getNext();
-                    t2 = t2.getNext();
+        long number = this.calculator;
+        int x1;
+        int x2;
+        Item var1;
+        Item var2;
+        while (number > 0) {
+            x1 = 0;
+            x2 = 1;
+            var1 = indexAt(x1);
+            var2 = indexAt(x2);
+            while (x2 < number) {
+                if (var1.getValue() > var2.getValue()) {
+                    swap(x1, x2);
+                    x1 += 1;
+                    x2 += 1;
+                    var1 = indexAt(x1);
+                    var2 = indexAt(x2);
+                } else if (var1.getValue() <= var2.getValue()) {
+                    ++x1;
+                    ++x2;
+                    var1 = var1.getNext();
+                    var2 = var2.getNext();
                 }
             }
-            --this.count;
+            --number;
         }
     }
 }
